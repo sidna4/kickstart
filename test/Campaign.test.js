@@ -81,4 +81,31 @@ describe('Campaigns', () => {
 
         assert.strictEqual('Buy Batteries', request.description);
     });
+
+    it('Processess requests', async () => {
+        await campaign.methods.contribute().send({
+            from: accounts[1],
+            value: web3.utils.toWei('10', 'ether')
+        });
+
+        await campaign.methods
+            .createRequest('A', web3.utils.toWei('5', 'ether'), accounts[1])
+            .send({ from: accounts[0], gas: '1000000' });
+
+        await campaign.methods
+            .approveRequest(0)
+            .send({ from: accounts[1], gas: '1000000' });
+
+        await campaign.methods
+            .finalizeRequest(0)
+            .send({ from: accounts[0], gas: '1000000' });
+
+        let balance = await web3.eth.getBalance(accounts[1]);
+
+        balance = web3.utils.fromWei(balance, 'ether');
+
+        balance = parseFloat(balance);
+
+        assert(balance > 94);
+    });
 });
