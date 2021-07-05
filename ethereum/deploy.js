@@ -3,8 +3,6 @@ const Web3 = require('web3');
 
 const compiledFactory = require('../ethereum/build/CampaignFactory.json');
 
-console.log('XX');
-
 const abi = compiledFactory.abi;
 const bytecode = compiledFactory.evm.bytecode.object;
 
